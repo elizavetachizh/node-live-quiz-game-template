@@ -3,6 +3,7 @@ import type { RawData } from 'ws';
 import type { WSMessage } from './types';
 import { sendError } from './ws/protocol';
 import { routeMessage } from './ws/router';
+import { socketToUserId, usersById } from './state/store';
 
 const PORT = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 3000;
 const wss = new WebSocketServer({ port: PORT });
@@ -23,6 +24,8 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
+    socketToUserId.delete(ws);
+
     // На следующих шагах здесь появится cleanup игрока/игры.
     console.log('Client disconnected');
   });

@@ -1,5 +1,6 @@
 import { WebSocket } from 'ws';
-import { Game, User } from '../types';
+import { Game, PlayerJoinedPayload, UpdatePlayersPayload, User } from '../types';
+import { sendMessage } from '../ws/protocol';
 
   // делаем разные сеттеры для разных типов данных
 //  - usersByName: быстрый доступ для проверки login/register
@@ -13,3 +14,47 @@ export const socketToUserId = new Map<WebSocket, string>();
 //for games
 export const gamesById = new Map<string, Game>();
 export const gameIdByCode = new Map<string, string>();
+
+
+export const getUserBySocket = (ws: WebSocket): User | undefined => {
+  const userId = socketToUserId.get(ws);
+  if(!userId){
+    return undefined;
+  }
+  return usersById.get(userId);
+};
+
+export const broadcastPlayerJoined = (game: Game, type: string, data: PlayerJoinedPayload) => {
+  
+  const sockets = new Set<WebSocket>();
+  const hostUser = usersById.get(game.hostId);
+  if (hostUser?.ws && hostUser.ws.readyState === WebSocket.OPEN) {
+    sockets.add(hostUser.ws);
+  }
+  for (const player of game.players) {
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+      sockets.add(player.ws);
+    }
+  }
+  for (const ws of sockets) {
+    sendMessage(ws, type, data);
+  }
+}
+
+
+export const broadcastUpdatePlayers = (game: Game, type: string, data: UpdatePlayersPayload[]) => {
+  
+  const sockets = new Set<WebSocket>();
+  const hostUser = usersById.get(game.hostId);
+  if (hostUser?.ws && hostUser.ws.readyState === WebSocket.OPEN) {
+    sockets.add(hostUser.ws);
+  }
+  for (const player of game.players) {
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+      sockets.add(player.ws);
+    }
+  }
+  for (const ws of sockets) {
+    sendMessage(ws, type, data);
+  }
+}

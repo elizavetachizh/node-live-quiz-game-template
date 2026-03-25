@@ -2,14 +2,11 @@ import { WebSocket } from 'ws';
 import { sendError, sendMessage } from "../ws/protocol";
 import { CreateGameData, User } from '../types';
 import crypto from 'crypto';
-import { gamesById, gameIdByCode, usersById, socketToUserId } from '../state/store';
+import { gamesById, gameIdByCode, usersById, socketToUserId, getUserBySocket } from '../state/store';
 import { Game } from '../types';
 import { generateRoomCode } from '../helpers/generateRoomCodeHelper';
 
 
-const getUserBySocket = (ws: WebSocket): User | undefined => {
-    return usersById.get(socketToUserId.get(ws) as string);
-  };
 
 export const handleCreateGame = (ws: WebSocket, data: CreateGameData): void => {
     const user = getUserBySocket(ws);

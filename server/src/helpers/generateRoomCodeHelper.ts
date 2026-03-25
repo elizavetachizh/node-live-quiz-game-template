@@ -6,5 +6,5 @@ export const generateRoomCode = (): string => {
     const idx = Math.floor(Math.random() * CODE_ALPHABET.length);
     code += CODE_ALPHABET[idx];
   }
-  return code;
+  return code.toUpperCase();
 };

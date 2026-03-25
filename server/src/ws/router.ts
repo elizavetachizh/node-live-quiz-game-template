@@ -1,6 +1,7 @@
 import { handleCreateGame } from "../handlers/createGame";
+import { handleJoinGame } from "../handlers/joinGame";
 import { handleReg } from "../handlers/reg";
-import { CreateGameData, RegData, WSMessage } from "../types";
+import { CreateGameData, JoinGameData, RegData, WSMessage } from "../types";
 import { sendError } from "./protocol";
 import { WebSocket } from "ws";
 
@@ -15,6 +16,8 @@ export const routeMessage = (ws: WebSocket, parsedMessage: WSMessage) => {
           handleCreateGame(ws, parsedMessage.data as CreateGameData);
           break;
         case 'join_game':
+            handleJoinGame(ws, parsedMessage.data as JoinGameData);
+            break;
         case 'start_game':
         case 'answer':
           sendError(ws, `Command "${parsedMessage.type}" is not implemented yet`);

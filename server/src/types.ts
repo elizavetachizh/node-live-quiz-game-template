@@ -65,3 +65,12 @@ export interface AnswerData {
   questionIndex: number;
   answerIndex: number;
 }
+export interface PlayerJoinedPayload {
+  playerName: string;
+  playerCount: number;
+};
+export interface UpdatePlayersPayload {
+  name: string;
+  index: string;
+  score: number;
+};
