@@ -27,6 +27,7 @@
     "concurrently": "^9.1.2"
   },
   "dependencies": {
-    "crypto": "^1.0.1"
+    "crypto": "^1.0.1",
+    "prettier": "^3.8.1"
   }
 }

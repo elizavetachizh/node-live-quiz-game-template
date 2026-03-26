@@ -1,5 +1,5 @@
 import { WebSocket } from 'ws';
-import { Game, PlayerJoinedPayload, UpdatePlayersPayload, User } from '../types';
+import { Game, GameFinishedPayload, PlayerJoinedPayload, QuestionPayload, QuestionResultPayload, UpdatePlayersPayload, User } from '../types';
 import { sendMessage } from '../ws/protocol';
 
   // делаем разные сеттеры для разных типов данных
@@ -44,6 +44,54 @@ export const broadcastPlayerJoined = (game: Game, type: string, data: PlayerJoin
 
 export const broadcastUpdatePlayers = (game: Game, type: string, data: UpdatePlayersPayload[]) => {
   
+  const sockets = new Set<WebSocket>();
+  const hostUser = usersById.get(game.hostId);
+  if (hostUser?.ws && hostUser.ws.readyState === WebSocket.OPEN) {
+    sockets.add(hostUser.ws);
+  }
+  for (const player of game.players) {
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+      sockets.add(player.ws);
+    }
+  }
+  for (const ws of sockets) {
+    sendMessage(ws, type, data);
+  
+  }
+}
+
+export const broadcastToGame=(game: Game, type: string, data: QuestionPayload) => {
+  const sockets = new Set<WebSocket>();
+  const hostUser = usersById.get(game.hostId);
+  if (hostUser?.ws && hostUser.ws.readyState === WebSocket.OPEN) {
+    sockets.add(hostUser.ws);
+  }
+  for (const player of game.players) {
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+      sockets.add(player.ws);
+    }
+  }
+  for (const ws of sockets) {
+    sendMessage(ws, type, data);
+  }
+}
+export const broadcastQuestionResult = (game: Game, type: string, data: QuestionResultPayload) => {
+  const sockets = new Set<WebSocket>();
+  const hostUser = usersById.get(game.hostId);
+  if (hostUser?.ws && hostUser.ws.readyState === WebSocket.OPEN) {
+    sockets.add(hostUser.ws);
+  }
+  for (const player of game.players) {
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+      sockets.add(player.ws);
+    }
+  }
+  for (const ws of sockets) {
+    sendMessage(ws, type, data);
+  }
+}
+
+export const broadcastGameFinished = (game: Game, type: string, data: GameFinishedPayload) => {
   const sockets = new Set<WebSocket>();
   const hostUser = usersById.get(game.hostId);
   if (hostUser?.ws && hostUser.ws.readyState === WebSocket.OPEN) {

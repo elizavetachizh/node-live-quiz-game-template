@@ -1,42 +1,51 @@
-import { broadcastPlayerJoined, broadcastUpdatePlayers, gameIdByCode, gamesById, getUserBySocket, socketToUserId } from "../state/store";
+import {
+  broadcastPlayerJoined,
+  broadcastUpdatePlayers,
+  gameIdByCode,
+  gamesById,
+  getUserBySocket,
+  socketToUserId,
+} from "../state/store";
 import { JoinGameData, Player } from "../types";
 import { sendError, sendMessage } from "../ws/protocol";
 import { WebSocket } from "ws";
 
 export const handleJoinGame = (ws: WebSocket, data: JoinGameData) => {
-    if(!data || typeof data !== 'object'){
-      sendError(ws, 'Invalid data');
-      return;
-    }
-    const user = getUserBySocket(ws);
-    if(!user){
-      sendError(ws, 'User not found. Please register first');
-      return;
-    }
-    const code = data.code?.trim().toUpperCase();
-    if(!code || typeof code !== 'string' || code.length !== 6){
-      sendError(ws, 'Invalid roomcode');
-      return;
-    }
-    const gameId = gameIdByCode.get(code);
-    if(!gameId){
-      sendError(ws, 'Game not found');
-      return;
-    }
-    const game = gamesById.get(gameId);
-    if(!game){
-        sendError(ws, 'Game not found');
-        return;
-    }
-   if(game.status !== 'waiting'){
-    sendError(ws, 'Game is not waiting for players');
+  if (!data || typeof data !== "object") {
+    sendError(ws, "Invalid data");
     return;
-   }
-   if(user.index === game.hostId){
-    sendError(ws, 'Host cannot join as player');
+  }
+  const user = getUserBySocket(ws);
+  if (!user) {
+    sendError(ws, "User not found. Please register first");
     return;
-   }
-  const foundPlayer = game.players.find((player) => player.index === user.index);
+  }
+  const code = data.code?.trim().toUpperCase();
+  if (!code || typeof code !== "string" || code.length !== 6) {
+    sendError(ws, "Invalid roomcode");
+    return;
+  }
+  const gameId = gameIdByCode.get(code);
+  if (!gameId) {
+    sendError(ws, "Game not found");
+    return;
+  }
+  const game = gamesById.get(gameId);
+  if (!game) {
+    sendError(ws, "Game not found");
+    return;
+  }
+  if (game.status !== "waiting") {
+    sendError(ws, "Game is not waiting for players");
+    return;
+  }
+  if (user.index === game.hostId) {
+    sendError(ws, "Host cannot join as player");
+    return;
+  }
+  const foundPlayer = game.players.find(
+    (player) => player.index === user.index,
+  );
 
   if (foundPlayer) {
     foundPlayer.ws = ws;
@@ -53,7 +62,7 @@ export const handleJoinGame = (ws: WebSocket, data: JoinGameData) => {
   // Общий хвост: состояние комнаты уже обновлено (новый игрок или тот же с новым ws).
   socketToUserId.set(ws, user.index);
 
-  sendMessage(ws, 'game_joined', { gameId: game.id });
+  sendMessage(ws, "game_joined", { gameId: game.id });
 
   const playersPayload = game.players.map((p) => ({
     name: p.name,
@@ -61,9 +70,9 @@ export const handleJoinGame = (ws: WebSocket, data: JoinGameData) => {
     score: p.score,
   }));
 
-  broadcastPlayerJoined(game, 'player_joined', {
+  broadcastPlayerJoined(game, "player_joined", {
     playerName: user.name,
     playerCount: game.players.length,
   });
-  broadcastUpdatePlayers(game, 'update_players', playersPayload);
+  broadcastUpdatePlayers(game, "update_players", playersPayload);
 };
