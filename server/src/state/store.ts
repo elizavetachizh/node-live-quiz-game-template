@@ -106,3 +106,23 @@ export const broadcastGameFinished = (game: Game, type: string, data: GameFinish
     sendMessage(ws, type, data);
   }
 }
+
+const collectGameSockets = (game: Game): Set<WebSocket> => {
+  const sockets = new Set<WebSocket>();
+  const hostUser = usersById.get(game.hostId);
+  if (hostUser?.ws && hostUser.ws.readyState === WebSocket.OPEN) {
+    sockets.add(hostUser.ws);
+  }
+  for (const player of game.players) {
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+      sockets.add(player.ws);
+    }
+  }
+  return sockets;
+};
+
+export const broadcastErrorToGame = (game: Game, message: string): void => {
+  for (const socket of collectGameSockets(game)) {
+    sendMessage(socket, 'error', { message });
+  }
+};
