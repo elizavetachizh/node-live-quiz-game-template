@@ -1,6 +1,6 @@
 import { WebSocket } from 'ws';
-import { Game, GameFinishedPayload, PlayerJoinedPayload, QuestionPayload, QuestionResultPayload, UpdatePlayersPayload, User } from '../types';
-import { sendMessage } from '../ws/protocol';
+import { Game, GameFinishedPayload, PlayerJoinedPayload, QuestionPayload, QuestionResultPayload, UpdatePlayersPayload, User } from '../types.js';
+import { sendMessage } from '../ws/protocol.js';
 
   // делаем разные сеттеры для разных типов данных
 //  - usersByName: быстрый доступ для проверки login/register

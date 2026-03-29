@@ -5,9 +5,9 @@ import {
   gamesById,
   getUserBySocket,
   socketToUserId,
-} from "../state/store";
-import { JoinGameData, Player } from "../types";
-import { sendError, sendMessage } from "../ws/protocol";
+} from "../state/store.js";
+import { JoinGameData, Player } from "../types.js";
+import { sendError, sendMessage } from "../ws/protocol.js";
 import { WebSocket } from "ws";
 
 export const handleJoinGame = (ws: WebSocket, data: JoinGameData) => {

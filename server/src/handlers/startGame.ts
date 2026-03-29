@@ -1,8 +1,8 @@
-import { gamesById, getUserBySocket } from "../state/store";
-import { StartGameData } from "../types";
-import { sendError } from "../ws/protocol";
+import { gamesById, getUserBySocket } from "../state/store.js";
+import { StartGameData } from "../types.js";
+import { sendError } from "../ws/protocol.js";
 import { WebSocket } from "ws";
-import { startQuestion } from "../services/questionFlowForStartGame";
+import { startQuestion } from "../services/questionFlowForStartGame.js";
 
 export const handleStartGame = (ws: WebSocket, data: StartGameData): void => {
   if (!data || typeof data !== "object") {

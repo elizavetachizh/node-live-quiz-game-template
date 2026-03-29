@@ -1,4 +1,4 @@
-import { finishQuestion } from "../services/questionFlowForStartGame";
+import { finishQuestion } from "../services/questionFlowForStartGame.js";
 import {
   broadcastErrorToGame,
   broadcastUpdatePlayers,
@@ -6,7 +6,7 @@ import {
   gamesById,
   socketToUserId,
   usersById,
-} from "../state/store";
+} from "../state/store.js";
 import type { WebSocket } from "ws";
 
 const allRemainingPlayersAnswered = (game: {

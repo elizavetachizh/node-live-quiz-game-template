@@ -1,8 +1,8 @@
-import { handleAnswer } from "../handlers/answer";
-import { handleCreateGame } from "../handlers/createGame";
-import { handleJoinGame } from "../handlers/joinGame";
-import { handleReg } from "../handlers/reg";
-import { handleStartGame } from "../handlers/startGame";
+import { handleAnswer } from "../handlers/answer.js";
+import { handleCreateGame } from "../handlers/createGame.js";
+import { handleJoinGame } from "../handlers/joinGame.js";
+import { handleReg } from "../handlers/reg.js";
+import { handleStartGame } from "../handlers/startGame.js";
 import {
   AnswerData,
   CreateGameData,
@@ -10,8 +10,8 @@ import {
   RegData,
   StartGameData,
   WSMessage,
-} from "../types";
-import { sendError } from "./protocol";
+} from "../types.js";
+import { sendError } from "./protocol.js";
 import { WebSocket } from "ws";
 
 export const routeMessage = (ws: WebSocket, parsedMessage: WSMessage) => {

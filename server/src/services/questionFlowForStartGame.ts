@@ -1,9 +1,9 @@
-import { Game } from "../types";
+import { Game } from "../types.js";
 import {
   broadcastGameFinished,
   broadcastQuestionResult,
   broadcastToGame,
-} from "../state/store";
+} from "../state/store.js";
 
 const BASE_POINTS = 1000;
 /** Пауза перед следующим вопросом (как «Next question starting soon…» на клиенте) */
@@ -19,6 +19,9 @@ export const finishQuestion = (game: Game): void => {
 
   const idx = game.currentQuestion;
   const q = game.questions[idx];
+  if (!q) {
+    return;
+  }
 
   const playerResults = game.players.map((player) => {
     const entry = game.playerAnswers.get(player.index);

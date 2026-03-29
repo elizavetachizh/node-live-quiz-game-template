@@ -1,9 +1,20 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
 import { WebSocketServer } from "ws";
+
+// Загружаем server/.env независимо от cwd (например, при npm run start из корня репозитория)
+dotenv.config({
+  path: path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../.env",
+  ),
+});
 import type { RawData } from "ws";
-import type { WSMessage } from "./types";
-import { sendError } from "./ws/protocol";
-import { routeMessage } from "./ws/router";
-import { handleDisconnect } from "./handlers/disconnect";
+import type { WSMessage } from "./types.js";
+import { sendError } from "./ws/protocol.js";
+import { routeMessage } from "./ws/router.js";
+import { handleDisconnect } from "./handlers/disconnect.js";
 
 const PORT = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 3000;
 const wss = new WebSocketServer({ port: PORT });
@@ -19,6 +30,7 @@ wss.on("connection", (ws) => {
       routeMessage(ws, parsedMessage);
     } catch (error) {
       sendError(ws, "Invalid JSON or message format");
+
       return;
     }
   });

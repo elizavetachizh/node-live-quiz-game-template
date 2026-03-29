@@ -1,7 +1,7 @@
-import { finishQuestion } from "../services/questionFlowForStartGame";
-import { gamesById, getUserBySocket } from "../state/store";
-import { AnswerData } from "../types";
-import { sendError, sendMessage } from "../ws/protocol";
+import { finishQuestion } from "../services/questionFlowForStartGame.js";
+import { gamesById, getUserBySocket } from "../state/store.js";
+import { AnswerData } from "../types.js";
+import { sendError, sendMessage } from "../ws/protocol.js";
 import { WebSocket } from "ws";
 
 export const handleAnswer = (ws: WebSocket, data: AnswerData): void => {

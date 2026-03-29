@@ -1,9 +1,9 @@
 import { WebSocket } from "ws";
-import { sendMessage } from "../ws/protocol";
-import { RegData } from "../types";
-import { usersByName, usersById, socketToUserId } from "../state/store";
-import { User } from "../types";
-import crypto from "crypto";
+import { sendMessage } from "../ws/protocol.js";
+import { RegData } from "../types.js";
+import { usersByName, usersById, socketToUserId } from "../state/store.js";
+import { User } from "../types.js";
+import crypto from "node:crypto";
 
 export const handleReg = (ws: WebSocket, data: RegData): void => {
   if (!data || typeof data !== "object") {

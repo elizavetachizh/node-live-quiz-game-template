@@ -1,12 +1,16 @@
 import { WebSocket } from "ws";
-import { sendError, sendMessage } from "../ws/protocol";
-import { CreateGameData } from "../types";
-import crypto from "crypto";
-import { gamesById, gameIdByCode, getUserBySocket } from "../state/store";
-import { Game } from "../types";
-import { generateRoomCode } from "../helpers/generateRoomCodeHelper";
+import { sendError, sendMessage } from "../ws/protocol.js";
+import { CreateGameData } from "../types.js";
+import crypto from "node:crypto";
+import { gamesById, gameIdByCode, getUserBySocket } from "../state/store.js";
+import { Game } from "../types.js";
+import { generateRoomCode } from "../helpers/generateRoomCodeHelper.js";
 
 export const handleCreateGame = (ws: WebSocket, data: CreateGameData): void => {
+  if (!data || typeof data !== "object") {
+    sendError(ws, "Invalid data");
+    return;
+  }
   const user = getUserBySocket(ws);
   if (!user) {
     sendError(ws, "User not found. Please register first");
